@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,10 +43,15 @@ class Logic {
         val cells = remember { mutableStateListOf<Int>() }
         val valueAlive = mutableListOf<Int>()
 
+        val configuration = LocalConfiguration.current
+        val screenWidth = configuration.screenWidthDp.dp
+        val screenHeight = configuration.screenHeightDp.dp
+
         ConstraintLayout {
             Column(
                 modifier
-                    .fillMaxSize()
+                    .width(screenWidth)
+                    .height(screenHeight)
                     .background(
                         Brush.verticalGradient(
                             0.0f to backColor1,
@@ -100,14 +106,11 @@ class Logic {
                 modifier
                     .fillMaxWidth()
                     .constrainAs(createRef()) {
-                        linkTo(
-                            start = parent.start,
-                            top = parent.bottom,
-                            end = parent.end,
-                            bottom = parent.bottom
-                        )
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
                     }
-                    .padding(start = 16.dp, end = 16.dp, bottom = 150.dp)) {
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
                 Text(text = stringResource(id = R.string.create),
                 color = Color.White,
                 fontWeight = FontWeight.Bold)

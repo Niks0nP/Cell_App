@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import nikita.app.cell_app.logic.App
 import nikita.app.cell_app.ui.theme.Cell_AppTheme
-import nikita.app.cell_app.logic.Logic
 
 class MainActivity : ComponentActivity() {
 
-    private val logic = Logic()
+    private val logic = App.getInstance().logic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

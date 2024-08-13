@@ -1,6 +1,7 @@
-package nikita.app.cell_app.logic
+package nikita.app.cell_app.logic.application
 
 import android.app.Application
+import nikita.app.cell_app.logic.Logic
 
 class App : Application() {
 

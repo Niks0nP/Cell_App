@@ -43,6 +43,13 @@ class Logic {
     private val cells1 = mutableStateListOf<Int>()
     private val valueAlive = mutableListOf<Int>()
 
+    private val gradient = Brush.verticalGradient(
+        0.0f to backColor1,
+        1.0f to Color.Black,
+        startY = 0.0f,
+        endY = 1500.0f
+    )
+
     @Composable
     fun Greeting(name: String, modifier: Modifier = Modifier) {
 
@@ -57,14 +64,7 @@ class Logic {
             Column(
                 modifier
                     .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            0.0f to backColor1,
-                            1.0f to Color.Black,
-                            startY = 0.0f,
-                            endY = 1500.0f
-                        )
-                    )
+                    .background(gradient)
                     .padding(bottom = 80.dp)) {
                 Column(
                     modifier

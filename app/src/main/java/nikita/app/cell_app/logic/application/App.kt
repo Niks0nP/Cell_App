@@ -1,11 +1,11 @@
 package nikita.app.cell_app.logic.application
 
 import android.app.Application
-import nikita.app.cell_app.logic.Logic
+import nikita.app.cell_app.viewmodel.MyViewModel
 
 class App : Application() {
 
-    val logic = Logic()
+    val viewModel = MyViewModel()
     companion object {
         private lateinit var instance: App
 

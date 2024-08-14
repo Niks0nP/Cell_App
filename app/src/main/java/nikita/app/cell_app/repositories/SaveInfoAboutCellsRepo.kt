@@ -4,15 +4,9 @@ import androidx.compose.runtime.mutableStateListOf
 
 class SaveInfoAboutCellsRepo {
 
-    private val cells = mutableStateListOf<Int>()
-    private val valueAlive = mutableListOf<Int>()
+     val _cells = mutableStateListOf<Int>().apply { addAll(emptyList()) }
+    val cells : List<Int> get() = _cells
 
-    fun getCells() : MutableList<Int> {
-        return cells
-    }
-
-    fun setCells() {
-        cells.add(1)
-    }
-
+     val _valueAlive = mutableListOf<Int>().apply { addAll(emptyList()) }
+    val valueAlive : List<Int> get() = _valueAlive
 }

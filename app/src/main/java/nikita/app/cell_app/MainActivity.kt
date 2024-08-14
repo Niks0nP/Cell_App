@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import nikita.app.cell_app.logic.UiLayer
 import nikita.app.cell_app.logic.application.App
 import nikita.app.cell_app.ui.theme.Cell_AppTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val logic = App.getInstance().logic
+    private val uiLayer = UiLayer()
+    private val viewModel = App.getInstance().viewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +25,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             Cell_AppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    logic.Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    uiLayer.Greeting(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel
                     )
                 }
             }

@@ -18,13 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,26 +33,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import kotlinx.coroutines.launch
 import nikita.app.cell_app.R
 import nikita.app.cell_app.ui.theme.Cell_AppTheme
-import nikita.app.cell_app.ui.theme.backColor1
+import nikita.app.cell_app.ui.theme.gradient
+import nikita.app.cell_app.viewmodel.MyViewModel
 
-class Logic {
-
-    private val cells1 = mutableStateListOf<Int>()
-    private val valueAlive = mutableListOf<Int>()
-
-    private val gradient = Brush.verticalGradient(
-        0.0f to backColor1,
-        1.0f to Color.Black,
-        startY = 0.0f,
-        endY = 1500.0f
-    )
+class UiLayer {
 
     @Composable
-    fun Greeting(name: String, modifier: Modifier = Modifier) {
+    fun Greeting(modifier: Modifier = Modifier, viewModel: MyViewModel = MyViewModel()) {
 
-        val cells = remember {
-            cells1
-        }
+        val cells = viewModel.cells
+        val valueAlive = viewModel.valueAlive
 
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
@@ -80,38 +67,16 @@ class Logic {
                 LazyColumn(state = listState) {
                     items ( cells.size ) {
                         AnimatedVisibility(visible = true) {
-                            CellItem(valueAlive[it])
-                        }
-                    }
-
-                    if (cells.size >= 3) {
-                        if (valueAlive[cells.size - 1] == 1 &&
-                            valueAlive[cells.size - 2] == 1 &&
-                            valueAlive[cells.size - 3] == 1) {
-                            cells.add(1)
-                            valueAlive.add(2)
-                            item { CellItem(valueAlive[cells.size - 1]) }
-                        }
-                    }
-
-                    if (cells.size >= 3) {
-                        if (valueAlive[cells.size - 1] == 0 &&
-                            valueAlive[cells.size - 2] == 0 &&
-                            valueAlive[cells.size - 3] == 0) {
-                            cells.add(1)
-                            valueAlive.add(3)
-                            item { CellItem(valueAlive[cells.size - 1]) }
+                            CellItem(valueAlive[it], viewModel)
                         }
                     }
                 }
-
             }
             Button(onClick = {
-                cells.add(1)
-                valueAlive.add((0..1).random())
+                viewModel.addSell()
 
                 coroutineScope.launch {
-                    listState.animateScrollToItem(cells1.size - 1)
+                    listState.animateScrollToItem(cells.size - 1)
                 }
             },
                 modifier
@@ -127,13 +92,10 @@ class Logic {
                 fontWeight = FontWeight.Bold)
             }
         }
-
-
-
     }
 
     @Composable
-    fun CellItem(value: Int) {
+    fun CellItem(value: Int, viewModel: MyViewModel) {
         Row(
             Modifier
                 .fillMaxWidth()
@@ -147,37 +109,22 @@ class Logic {
                 modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp)) {
 
                 Image(painter =
-                when (value) {
-                    0 -> painterResource(id = R.drawable.ellipse_death)
-                    1 -> painterResource(id = R.drawable.ellipse_life)
-                    else -> painterResource(id = R.drawable.ellipce_life_create)
-                }, contentDescription = "",
+                painterResource(id = viewModel.getCellUiState(value).backgroundResource)
+                    , contentDescription = "",
                     modifier = Modifier.size(40.dp))
 
                 Image(painter =
-                when (value) {
-                    0, 3 -> painterResource(id = R.drawable.death_cell)
-                    1 -> painterResource(id = R.drawable.life_cell)
-                    else -> painterResource(id = R.drawable.create_life)
-                }, contentDescription = "",
+                painterResource(id = viewModel.getCellUiState(value).iconResource)
+                    , contentDescription = "",
                     modifier = Modifier.size(22.dp))
             }
             Column {
-                Text(text = when (value) {
-                    0 -> stringResource(id = R.string.death1)
-                    1 -> stringResource(id = R.string.life1)
-                    else -> stringResource(id = R.string.life_create1)
-                },
+                Text(text = stringResource(id = viewModel.getCellUiState(value).title),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                    )
-                Text(text = when (value) {
-                    0 -> stringResource(id = R.string.death2)
-                    1 -> stringResource(id = R.string.life2)
-                    3 -> stringResource(id = R.string.life_death)
-                    else -> stringResource(id = R.string.life_create2)
-                },
+                    color = Color.Black)
+
+                Text(text = stringResource(id = viewModel.getCellUiState(value).description),
                     color = Color.Black)
             }
 
@@ -188,7 +135,7 @@ class Logic {
     @Composable
     fun GreetingPreview() {
         Cell_AppTheme {
-            Greeting("Android")
+            Greeting()
         }
     }
 }
